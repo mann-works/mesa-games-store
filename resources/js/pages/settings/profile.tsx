@@ -1,8 +1,10 @@
-import { Form, Head, usePage } from '@inertiajs/react';
+import { Head, usePage, useForm } from '@inertiajs/react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import ChangePasswordModal from '@/components/change-password-modal';
 import DeleteUser from '@/components/delete-user';
 import Heading from '@/components/heading';
 import InputError from '@/components/input-error';
+import ProfileAvatarUpload from '@/components/profile-avatar-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -15,6 +17,19 @@ type PageProps = {
 
 export default function Profile() {
     const { auth } = usePage<PageProps>().props;
+    const { data, setData, patch, processing, errors, isDirty, reset } =
+        useForm({
+            name: auth.user.name,
+            email: auth.user.email,
+            phone_number: auth.user.phone_number || '',
+        });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        patch(ProfileController.update.url(), {
+            preserveScroll: true,
+        });
+    };
 
     return (
         <>
@@ -23,74 +38,98 @@ export default function Profile() {
             <h1 className="sr-only">Profile settings</h1>
 
             <div className="space-y-6">
+                {/* Avatar Upload Section */}
+                <ProfileAvatarUpload />
+
+                {/* Profile Information Section */}
                 <Heading
                     variant="small"
-                    title="Profile"
-                    description="Update your name and email address"
+                    title="Personal Information"
+                    description="Update your name, email, and phone number"
                 />
 
-                <Form
-                    {...ProfileController.update.form()}
-                    options={{
-                        preserveScroll: true,
-                    }}
-                    className="space-y-6"
-                >
-                    {({ processing, errors }) => (
-                        <>
-                            <div className="grid gap-2">
-                                <Label htmlFor="name">Name</Label>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid gap-2">
+                        <Label htmlFor="name">Full Name</Label>
 
-                                <Input
-                                    id="name"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.name}
-                                    name="name"
-                                    required
-                                    autoComplete="name"
-                                    placeholder="Full name"
-                                />
+                        <Input
+                            id="name"
+                            className="mt-1 block w-full"
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            name="name"
+                            required
+                            autoComplete="name"
+                            placeholder="Maulana Syawal Wiguna"
+                        />
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.name}
-                                />
-                            </div>
+                        <InputError className="mt-2" message={errors.name} />
+                    </div>
 
-                            <div className="grid gap-2">
-                                <Label htmlFor="email">Email address</Label>
+                    <div className="grid gap-2">
+                        <Label htmlFor="email">Email</Label>
 
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    className="mt-1 block w-full"
-                                    defaultValue={auth.user.email}
-                                    name="email"
-                                    required
-                                    autoComplete="username"
-                                    placeholder="Email address"
-                                />
+                        <Input
+                            id="email"
+                            type="email"
+                            className="mt-1 block w-full"
+                            value={data.email}
+                            onChange={(e) => setData('email', e.target.value)}
+                            name="email"
+                            required
+                            autoComplete="username"
+                            placeholder="maulana.syawal@widyatama.ac.id"
+                        />
 
-                                <InputError
-                                    className="mt-2"
-                                    message={errors.email}
-                                />
-                            </div>
+                        <InputError className="mt-2" message={errors.email} />
+                    </div>
 
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    disabled={processing}
-                                    data-test="update-profile-button"
-                                >
-                                    Save
-                                </Button>
-                            </div>
-                        </>
-                    )}
-                </Form>
+                    <div className="grid gap-2">
+                        <Label htmlFor="phone_number">No Telpon</Label>
+
+                        <Input
+                            id="phone_number"
+                            type="tel"
+                            className="mt-1 block w-full"
+                            value={data.phone_number}
+                            onChange={(e) =>
+                                setData('phone_number', e.target.value)
+                            }
+                            name="phone_number"
+                            autoComplete="tel"
+                            placeholder="085158001961"
+                        />
+
+                        <InputError
+                            className="mt-2"
+                            message={errors.phone_number}
+                        />
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-4">
+                        <Button
+                            disabled={processing || !isDirty}
+                            data-test="update-profile-button"
+                        >
+                            Save
+                        </Button>
+
+                        <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={() => reset()}
+                            disabled={processing || !isDirty}
+                        >
+                            Discard
+                        </Button>
+
+                        <ChangePasswordModal />
+                    </div>
+                </form>
+
+                {/* Delete Account Section */}
+                <DeleteUser />
             </div>
-
-            <DeleteUser />
         </>
     );
 }
