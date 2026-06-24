@@ -6,7 +6,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar,AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import {
     DropdownMenu,
@@ -97,6 +97,14 @@ export default function Welcome({ auth, featured, newReleases, popularGames }: W
                                 <DropdownMenuTrigger asChild>
                                     <Button variant="ghost" size="icon" className="rounded-full">
                                         <Avatar className="h-8 w-8">
+                                             <AvatarImage
+                                            src={
+                                                auth.user?.avatar
+                                                    ? `/storage/${auth.user.avatar}`
+                                                    : undefined
+                                            }
+                                            alt={auth.user?.name}
+                                        />
                                             <AvatarFallback className="text-xs">
                                                 {auth.user
                                                     ? auth.user.name.substring(0, 2).toUpperCase()
