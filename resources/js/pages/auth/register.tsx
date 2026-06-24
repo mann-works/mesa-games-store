@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
+import AuthSplitLayout from '@/layouts/auth/auth-split-layout';
+
 
 type Props = {
     passwordRules: string;
@@ -114,7 +116,12 @@ export default function Register({ passwordRules }: Props) {
     );
 }
 
-Register.layout = {
-    title: 'Create an account',
-    description: 'Enter your details below to create your account',
-};
+Register.layout = (page: React.ReactNode) => (
+    <AuthSplitLayout
+        title="Create an account"
+        description="Enter your details below to create your account"
+        panelSide="left"
+    >
+        {page}
+    </AuthSplitLayout>
+);
