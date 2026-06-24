@@ -21,6 +21,21 @@ class GameController extends Controller
         ]);
     }
 
+    public function welcome()
+    {
+        $featured = Game::latest()->first();
+
+        $newReleases = Game::latest()->take(4)->get();
+
+        $popularGames = Game::orderBy('rating', 'desc')->take(6)->get();
+
+        return Inertia::render('welcome', [
+            'featured' => $featured,
+            'newReleases' => $newReleases,
+            'popularGames' => $popularGames,
+        ]);
+    }
+
     /**
      * Show the create page.
      */
