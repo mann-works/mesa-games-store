@@ -32,18 +32,25 @@ import { UserMenuContent } from '@/components/user-menu-content';
 import { useCurrentUrl } from '@/hooks/use-current-url';
 import { useInitials } from '@/hooks/use-initials';
 import { cn, toUrl } from '@/lib/utils';
-import { dashboard } from '@/routes';
+import { dashboard, home } from '@/routes';
 import type { BreadcrumbItem, NavItem } from '@/types';
-
+import { index as games } from '@/routes/games';
 type Props = {
     breadcrumbs?: BreadcrumbItem[];
 };
 
 const mainNavItems: NavItem[] = [
     {
+        title: 'store',
+        href: home(),
+    },
+    {
         title: 'Dashboard',
         href: dashboard(),
-        icon: LayoutGrid,
+    },
+    {
+        title: 'Games',
+        href: games(),
     },
 ];
 

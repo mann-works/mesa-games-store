@@ -1,139 +1,235 @@
-import { Head, Link, usePage } from '@inertiajs/react';
-import { dashboard, login } from '@/routes';
-import { register } from '@/routes';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
+import { Head, Link } from '@inertiajs/react';
 import {
-    Card,
-    CardAction,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from '@/components/ui/card';
-import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-} from '@/components/ui/carousel';
+    NavigationMenu,
+    NavigationMenuItem,
+    NavigationMenuList,
+} from '@/components/ui/navigation-menu';
 
-export default function Welcome() {
-    const { auth } = usePage().props;
+import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+
+import { UserMenuContent } from '@/components/user-menu-content';
+interface WelcomeProps {
+    auth: {
+        user: any;
+    };
+}
+
+export default function Welcome({ auth }: WelcomeProps) {
+    const featuredGames = [1, 2, 3, 4];
+    const games = [1, 2, 3];
 
     return (
         <>
-            <Head title="Welcome" />
-            <div className="flex min-h-screen flex-col items-center bg-[#FDFDFC] p-6 text-[#1b1b18] lg:justify-center lg:p-8 dark:bg-[#0a0a0a]">
-                <header className="mb-6 w-full max-w-[335px] text-sm not-has-[nav]:hidden lg:max-w-4xl">
-                    <nav className="flex items-center justify-end gap-4">
-                        {auth.user ? (
-                            <Link
-                                href={dashboard()}
-                                className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                            >
-                                Dashboard
-                            </Link>
-                        ) : (
-                            <>
-                                <Link
-                                    href={login()}
-                                    className="inline-block rounded-sm border border-transparent px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#19140035] dark:text-[#EDEDEC] dark:hover:border-[#3E3E3A]"
-                                >
-                                    Log in
-                                </Link>
-                                <Link
-                                    href={register()}
-                                    className="inline-block rounded-sm border border-[#19140035] px-5 py-1.5 text-sm leading-normal text-[#1b1b18] hover:border-[#1915014a] dark:border-[#3E3E3A] dark:text-[#EDEDEC] dark:hover:border-[#62605b]"
-                                >
-                                    Register
-                                </Link>
-                            </>
-                        )}
-                    </nav>
+            <Head title="Mesa Game Store" />
+
+            <div className="min-h-screen bg-background">
+                {/* Navbar */}
+                <header className="border-b">
+                    <div className="container mx-auto flex h-16 items-center justify-between px-4">
+                        <div className="flex items-center gap-8">
+                            <h1 className="text-xl font-bold">
+                                Mesa Game Store
+                            </h1>
+
+                            <NavigationMenu>
+                                <NavigationMenuList className="flex gap-2">
+                                    <NavigationMenuItem>
+                                        <Link
+                                            href="/"
+                                            className="rounded-md px-3 py-2 text-sm font-medium transition hover:bg-accent hover:text-accent-foreground"
+                                        >
+                                            Store
+                                        </Link>
+                                    </NavigationMenuItem>
+
+                                    <NavigationMenuItem>
+                                        <Link
+                                            href="/library"
+                                            className="rounded-md px-3 py-2 text-sm font-medium transition hover:bg-accent hover:text-accent-foreground"
+                                        >
+                                            Library
+                                        </Link>
+                                    </NavigationMenuItem>
+
+                                    <NavigationMenuItem>
+                                        <Link
+                                            href="/community"
+                                            className="rounded-md px-3 py-2 text-sm font-medium transition hover:bg-accent hover:text-accent-foreground"
+                                        >
+                                            Community
+                                        </Link>
+                                    </NavigationMenuItem>
+
+                                    <NavigationMenuItem>
+                                        <Link
+                                            href="/support"
+                                            className="rounded-md px-3 py-2 text-sm font-medium transition hover:bg-accent hover:text-accent-foreground"
+                                        >
+                                            Support
+                                        </Link>
+                                    </NavigationMenuItem>
+                                </NavigationMenuList>
+                            </NavigationMenu>
+                        </div>
+
+                        <div className="flex items-center gap-3">
+                            <Input placeholder="Search..." className="w-52" />
+
+                            <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="rounded-full"
+                                    >
+                                        <Avatar>
+                                            {/* Menampilkan inisial nama jika user login, jika tidak tampil 'U' */}
+                                            <AvatarFallback>
+                                                {auth.user
+                                                    ? auth.user.name
+                                                          .substring(0, 2)
+                                                          .toUpperCase()
+                                                    : 'U'}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                    </Button>
+                                </DropdownMenuTrigger>
+
+                                <DropdownMenuContent className="w-48">
+                                    {auth.user ? (
+                                        // MENU JIKA USER SUDAH LOGIN
+                                        <>
+                                            <DropdownMenuGroup>
+                                                <DropdownMenuItem asChild>
+                                                    <Link href={'dashboard'}>
+                                                        Dashboard
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    Profile
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem>
+                                                    Settings
+                                                </DropdownMenuItem>
+                                            </DropdownMenuGroup>
+                                            <DropdownMenuSeparator />
+                                            <DropdownMenuGroup>
+                                                {/* Menggunakan method POST/as="button" untuk logout Inertia */}
+                                                <DropdownMenuItem
+                                                    variant="destructive"
+                                                    asChild
+                                                >
+                                                    <Link
+                                                        href={'logout'}
+                                                        method="post"
+                                                        as="button"
+                                                        className="w-full text-left"
+                                                    >
+                                                        Log out
+                                                    </Link>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuGroup>
+                                        </>
+                                    ) : (
+                                        // MENU JIKA USER BELUM LOGIN
+                                        <DropdownMenuGroup>
+                                            <DropdownMenuItem asChild>
+                                                <Link href={'login'}>
+                                                    Log in
+                                                </Link>
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem asChild>
+                                                <Link href={'register'}>
+                                                    Register
+                                                </Link>
+                                            </DropdownMenuItem>
+                                        </DropdownMenuGroup>
+                                    )}
+                                </DropdownMenuContent>
+                            </DropdownMenu>
+                        </div>
+                    </div>
                 </header>
 
-                <section className="mt-8">
-                    <Carousel
-                        className="w-full overflow-hidden rounded-3xl"
-                        opts={{
-                            loop: true,
-                        }}
-                    >
-                        <CarouselContent>
-                            {games.map((game) => (
-                                <CarouselItem key={game.id}>
-                                    <div className="relative h-[600px] overflow-hidden rounded-3xl">
-                                        <img
-                                            src={game.banner}
-                                            className="absolute inset-0 h-full w-full object-cover"
-                                        />
+                <main className="container mx-auto space-y-12 px-4 py-8">
+                    {/* Hero Section */}
+                    <section>
+                        <h2 className="text-3xl font-bold">Featured Games</h2>
+                        <p className="text-muted-foreground">
+                            Discover new adventures
+                        </p>
 
-                                        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/50 to-transparent" />
+                        <Card className="mt-4">
+                            <CardContent className="flex h-[400px] items-center justify-center">
+                                <div className="text-center">
+                                    <div className="mb-4 text-6xl">🎮</div>
+                                    <h3 className="text-2xl font-bold">
+                                        Featured Banner
+                                    </h3>
+                                    <p className="text-muted-foreground">
+                                        Carousel game promotion
+                                    </p>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </section>
 
-                                        <div className="relative z-10 flex h-full items-center">
-                                            <div className="max-w-xl p-12">
-                                                <p className="font-semibold text-primary">
-                                                    New Release
-                                                </p>
-
-                                                <h1 className="mt-2 text-6xl font-bold">
-                                                    {game.title}
-                                                </h1>
-
-                                                <p className="mt-6 text-zinc-300">
-                                                    {game.description}
-                                                </p>
-
-                                                <div className="mt-8 flex gap-4">
-                                                    <Button size="lg">
-                                                        Buy Now
-                                                    </Button>
-
-                                                    <Button
-                                                        variant="secondary"
-                                                        size="lg"
-                                                    >
-                                                        Wishlist
-                                                    </Button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </CarouselItem>
+                    {/* Featured Releases */}
+                    <section>
+                        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                            {featuredGames.map((game) => (
+                                <Card key={game}>
+                                    <CardContent className="flex h-28 items-center justify-center">
+                                        <Button variant="secondary">
+                                            New Release
+                                        </Button>
+                                    </CardContent>
+                                </Card>
                             ))}
-                        </CarouselContent>
-                    </Carousel>
-                </section>
+                        </div>
+                    </section>
 
-                <div className="flex w-full items-center justify-center opacity-100 transition-opacity duration-750 lg:grow starting:opacity-0">
-                    <h1 className="text-3xl font-bold text-white">
-                        mesa game store
-                    </h1>
-                </div>
-                <div className="hidden h-14.5 lg:block"></div>
+                    {/* Popular Games */}
+                    <section>
+                        <h2 className="text-3xl font-bold">Popular Games</h2>
+                        <p className="text-muted-foreground">
+                            Trending this week
+                        </p>
+
+                        <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                            {games.map((game) => (
+                                <Card key={game}>
+                                    <CardContent className="flex gap-4 p-4">
+                                        <div className="h-24 w-24 rounded-md bg-muted" />
+                                        <div>
+                                            <h3 className="font-semibold">
+                                                Game Title
+                                            </h3>
+                                            <p className="mt-2 text-sm text-muted-foreground">
+                                                Explore vast worlds and exciting
+                                                adventures. Build, craft and
+                                                conquer enemies in this epic
+                                                journey.
+                                            </p>
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            ))}
+                        </div>
+                    </section>
+                </main>
             </div>
         </>
     );
 }
-export const games = [
-    {
-        id: 1,
-        title: 'Black Myth: Wukong',
-        description: 'Embark on a journey to the west.',
-        banner: '/games/wukong.jpg',
-    },
-
-    {
-        id: 2,
-        title: 'Cyberpunk 2077',
-        description: 'Night City awaits.',
-        banner: '/games/cyberpunk.jpg',
-    },
-
-    {
-        id: 3,
-        title: 'Ghost of Tsushima',
-        description: 'Become the Ghost.',
-        banner: '/games/ghost.jpg',
-    },
-];
