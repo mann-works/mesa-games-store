@@ -10,6 +10,7 @@ import { Spinner } from '@/components/ui/spinner';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
+import AuthSplitLayout from '@/layouts/auth/auth-split-layout';
 
 type Props = {
     status?: string;
@@ -108,7 +109,12 @@ export default function Login({ status, canResetPassword }: Props) {
     );
 }
 
-Login.layout = {
-    title: 'Log in to your account',
-    description: 'Enter your email and password below to log in',
-};
+Login.layout = (page: React.ReactNode) => (
+    <AuthSplitLayout
+        title="Log in to your account"
+        description="Enter your email and password below to log in"
+        panelSide="left"
+    >
+        {page}
+    </AuthSplitLayout>
+);
